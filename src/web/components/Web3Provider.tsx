@@ -29,11 +29,11 @@ export function Web3Provider({
   );
 }
 
-declare module '@roxavn/core/web' {
-  interface AppProviderConfigs {
-    web3Provider: {
-      options: Omit<Web3ProviderProps, 'children'>;
-      component: typeof Web3Provider;
-    };
-  }
-}
+// declare module '@roxavn/core/web' {
+//   interface AppProviderConfigs {
+//     web3Provider: {
+//       options: Omit<Web3ProviderProps, 'children'>;
+//       component: typeof Web3Provider;
+//     };
+//   }
+// }
