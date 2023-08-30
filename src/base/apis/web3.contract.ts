@@ -48,6 +48,15 @@ class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
 }
 
 class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest> {
+  @MinLength(1)
+  @IsOptional()
+  public readonly address?: string;
+
+  @Min(1)
+  @TransformNumber()
+  @IsOptional()
+  public readonly networkId?: number;
+
   @Min(1)
   @TransformNumber()
   @IsOptional()

@@ -54,6 +54,10 @@ export class GetWeb3ContractsApiService extends InjectDatabaseService {
     const [items, totalItems] = await this.entityManager
       .getRepository(Web3Contract)
       .findAndCount({
+        where: {
+          networkId: request.networkId?.toString(),
+          address: request.address,
+        },
         take: pageSize,
         skip: (page - 1) * pageSize,
       });

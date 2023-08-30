@@ -30,6 +30,16 @@ const Page = () => {
           render: utils.Render.relativeTime,
         },
       }}
+      filters={[
+        {
+          name: 'networkId',
+          input: <NumberInput label={t('networkId')} />,
+        },
+        {
+          name: 'address',
+          input: <TextInput label={t('address')} />,
+        },
+      ]}
       headerActions={[
         {
           label: tCore('add'),
