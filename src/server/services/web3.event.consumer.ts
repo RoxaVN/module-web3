@@ -31,6 +31,8 @@ export abstract class Web3EventConsumersService extends InjectDatabaseService {
   abstract consume(event: Record<string, any>): Promise<void>;
   abstract crawlerId: string;
 
+  maxEventsPerConsume = 100;
+
   async handle() {
     let consumer = await this.entityManager
       .getRepository(Web3EventConsumer)
@@ -47,6 +49,7 @@ export abstract class Web3EventConsumersService extends InjectDatabaseService {
         blockNumber: MoreThan(fromBlock),
         crawlerId: this.crawlerId,
       },
+      take: this.maxEventsPerConsume,
       order: { blockNumber: 'ASC' },
     });
     if (events.length) {
