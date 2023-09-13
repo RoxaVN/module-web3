@@ -42,9 +42,6 @@ export class Web3Event {
   @Column('bigint', { nullable: true })
   logIndex?: string;
 
-  @Column('text')
-  signature: string;
-
   @Column({ type: 'jsonb' })
   data: Record<string, any>;
 

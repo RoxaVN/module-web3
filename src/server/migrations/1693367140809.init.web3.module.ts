@@ -30,7 +30,6 @@ export class InitWeb3Module1693367140809 implements MigrationInterface {
         "blockHash" text NOT NULL,
         "transactionIndex" bigint,
         "logIndex" bigint,
-        "signature" text NOT NULL,
         "data" jsonb NOT NULL,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         CONSTRAINT "PK_a39ee42b7ad72c0e83367a8cdb1" PRIMARY KEY ("id")
