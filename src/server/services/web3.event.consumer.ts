@@ -1,5 +1,10 @@
 import { InferApiRequest } from '@roxavn/core/base';
-import { InjectDatabaseService } from '@roxavn/core/server';
+import {
+  BaseService,
+  DatabaseService,
+  InjectDatabaseService,
+  serviceContainer,
+} from '@roxavn/core/server';
 import { MoreThan } from 'typeorm';
 
 import { web3EventConsumerApi } from '../../base/index.js';
@@ -27,14 +32,16 @@ export class GetWeb3EventConsumersApiService extends InjectDatabaseService {
 }
 
 @serverModule.injectable()
-export abstract class Web3EventConsumersService extends InjectDatabaseService {
+export abstract class Web3EventConsumersService extends BaseService {
   abstract consume(event: Record<string, any>): Promise<void>;
   abstract crawlerId: string;
 
   maxEventsPerConsume = 100;
 
   async handle() {
-    let consumer = await this.entityManager
+    const databaseService = await serviceContainer.getAsync(DatabaseService);
+
+    let consumer = await databaseService.manager
       .getRepository(Web3EventConsumer)
       .findOne({
         lock: { mode: 'pessimistic_write' },
@@ -44,7 +51,7 @@ export abstract class Web3EventConsumersService extends InjectDatabaseService {
         },
       });
     const fromBlock = consumer ? consumer.lastConsumeBlockNumber : '0';
-    const events = await this.entityManager.getRepository(Web3Event).find({
+    const events = await databaseService.manager.getRepository(Web3Event).find({
       where: {
         blockNumber: MoreThan(fromBlock),
         crawlerId: this.crawlerId,
@@ -60,13 +67,13 @@ export abstract class Web3EventConsumersService extends InjectDatabaseService {
       const lastConsumeBlockNumber = events[events.length - 1].blockNumber;
       if (consumer) {
         consumer.lastConsumeBlockNumber = lastConsumeBlockNumber;
-        await this.entityManager.save(consumer);
+        await databaseService.manager.save(consumer);
       } else {
         consumer = new Web3EventConsumer();
         consumer.crawlerId = this.crawlerId;
         consumer.name = this.constructor.name;
         consumer.lastConsumeBlockNumber = lastConsumeBlockNumber;
-        await this.entityManager
+        await databaseService.manager
           .getRepository(Web3EventConsumer)
           .insert(consumer);
       }
