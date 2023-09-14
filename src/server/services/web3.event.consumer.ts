@@ -1,4 +1,4 @@
-import { InferApiRequest } from '@roxavn/core/base';
+import { InferApiRequest, NotFoundException } from '@roxavn/core/base';
 import {
   BaseService,
   DatabaseService,
@@ -6,9 +6,15 @@ import {
   serviceContainer,
 } from '@roxavn/core/server';
 import { MoreThan } from 'typeorm';
+import { PublicClient, createPublicClient, http } from 'viem';
 
 import { web3EventConsumerApi } from '../../base/index.js';
-import { Web3Event, Web3EventConsumer } from '../entities/index.js';
+import {
+  Web3Event,
+  Web3EventConsumer,
+  Web3EventCrawler,
+  Web3Provider,
+} from '../entities/index.js';
 import { serverModule } from '../module.js';
 
 @serverModule.useApi(web3EventConsumerApi.getMany)
@@ -37,6 +43,51 @@ export abstract class Web3EventConsumersService extends BaseService {
   abstract crawlerId: string;
 
   maxEventsPerConsume = 100;
+
+  private _contractConfig: any;
+  private _publicClient: any;
+
+  private async init() {
+    const databaseService = await serviceContainer.getAsync(DatabaseService);
+    const crawler = await databaseService.manager
+      .getRepository(Web3EventCrawler)
+      .findOne({
+        relations: { contract: true },
+        where: { id: this.crawlerId },
+      });
+    if (!crawler) {
+      throw new NotFoundException();
+    }
+    const provider = await databaseService.manager
+      .getRepository(Web3Provider)
+      .findOne({ where: { networkId: crawler.contract.networkId } });
+    if (!provider) {
+      throw new NotFoundException();
+    }
+
+    this._publicClient = createPublicClient({
+      transport: http(provider.url),
+    });
+
+    this._contractConfig = {
+      address: crawler.contract.address,
+      abi: crawler.contract.abi,
+    };
+  }
+
+  async getContractConfig(): Promise<{ abi: any; address: '0x${string}' }> {
+    if (!this._contractConfig) {
+      await this.init();
+    }
+    return this._contractConfig;
+  }
+
+  async getPublicClient(): Promise<PublicClient> {
+    if (!this._publicClient) {
+      await this.init();
+    }
+    return this._publicClient;
+  }
 
   async handle() {
     const databaseService = await serviceContainer.getAsync(DatabaseService);

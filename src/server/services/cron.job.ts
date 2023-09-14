@@ -59,24 +59,6 @@ export class Web3EventCrawlersCronService extends BaseService {
             throw new NotFoundProviderException(contractEntity.networkId);
           }
           const web3 = createPublicClient({
-            chain: {
-              id: parseInt(providerEntity.networkId),
-              name: 'unknown',
-              network: 'unknown',
-              nativeCurrency: {
-                decimals: 18,
-                name: 'unknown',
-                symbol: 'UNK',
-              },
-              rpcUrls: {
-                default: {
-                  http: [providerEntity.url],
-                },
-                public: {
-                  http: [providerEntity.url],
-                },
-              },
-            },
             transport: http(providerEntity.url),
           });
           const lastBlockNumber = await web3.getBlockNumber();
