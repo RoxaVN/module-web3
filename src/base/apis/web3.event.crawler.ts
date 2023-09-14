@@ -46,6 +46,9 @@ class UpdateEventCrawlersRequest extends ExactProps<UpdateEventCrawlersRequest> 
 }
 
 class CreateWeb3EventCrawlerRequest extends ExactProps<CreateWeb3EventCrawlerRequest> {
+  @IsOptional()
+  public readonly id?: string;
+
   @MinLength(1)
   public readonly event: string;
 
