@@ -19,7 +19,6 @@ const web3EventSource = new ApiSource<{
   blockHash: string;
   transactionIndex?: string;
   logIndex?: string;
-  signature: string;
   data: Record<string, any>;
   createdDate: Date;
 }>([scopes.Web3Event], baseModule);

@@ -13,7 +13,7 @@ import { permissions, scopes } from '../access.js';
 
 const web3ContractSource = new ApiSource<{
   id: string;
-  address: string;
+  address: `0x${string}`;
   abi: Record<string, any>;
   networkId: string;
   metadata?: Record<string, any>;
@@ -23,7 +23,7 @@ const web3ContractSource = new ApiSource<{
 
 class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequest> {
   @MinLength(1)
-  public readonly address: string;
+  public readonly address: `0x${string}`;
 
   @Min(1)
   public readonly networkId: number;
@@ -37,7 +37,7 @@ class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
 
   @MinLength(1)
   @IsOptional()
-  public readonly address?: string;
+  public readonly address?: `0x${string}`;
 
   @Min(1)
   @IsOptional()
@@ -50,7 +50,7 @@ class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
 class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest> {
   @MinLength(1)
   @IsOptional()
-  public readonly address?: string;
+  public readonly address?: `0x${string}`;
 
   @Min(1)
   @TransformNumber()

@@ -1,6 +1,5 @@
 import { BaseService, DatabaseService, inject } from '@roxavn/core/server';
-import Web3, { Contract } from 'web3';
-import type { EventLog } from 'web3-eth-contract';
+import { PublicClient, Log, createPublicClient, http } from 'viem';
 
 import {
   Web3Contract,
@@ -29,17 +28,18 @@ export class Web3EventCrawlersCronService extends BaseService {
       .find({
         where: { isActive: true },
       });
-    const contracts: Record<
-      string,
-      { service: Contract<any>; entity: Web3Contract }
-    > = {};
+    const contracts: Record<string, { entity: Web3Contract }> = {};
     type ProviderItem = {
-      service: Web3;
+      service: PublicClient;
       entity: Web3Provider;
       lastBlockNumber: bigint;
     };
     const providers: Record<string, ProviderItem> = {};
-    const eventLogs: { log: EventLog; network: string; crawler: string }[] = [];
+    const eventLogs: {
+      log: Log;
+      network: string;
+      crawler: string;
+    }[] = [];
 
     for (const crawler of crawlers) {
       let contract = contracts[crawler.contractId];
@@ -58,10 +58,28 @@ export class Web3EventCrawlersCronService extends BaseService {
           if (!providerEntity) {
             throw new NotFoundProviderException(contractEntity.networkId);
           }
-          const web3 = new Web3(
-            new Web3.providers.HttpProvider(providerEntity.url)
-          );
-          const lastBlockNumber = await web3.eth.getBlockNumber();
+          const web3 = createPublicClient({
+            chain: {
+              id: parseInt(providerEntity.networkId),
+              name: 'unknown',
+              network: 'unknown',
+              nativeCurrency: {
+                decimals: 18,
+                name: 'unknown',
+                symbol: 'UNK',
+              },
+              rpcUrls: {
+                default: {
+                  http: [providerEntity.url],
+                },
+                public: {
+                  http: [providerEntity.url],
+                },
+              },
+            },
+            transport: http(providerEntity.url),
+          });
+          const lastBlockNumber = await web3.getBlockNumber();
           provider = {
             service: web3,
             entity: providerEntity,
@@ -71,10 +89,6 @@ export class Web3EventCrawlersCronService extends BaseService {
           providers[contractEntity.networkId] = provider;
         }
         contract = {
-          service: new provider.service.eth.Contract(
-            contractEntity.abi as any,
-            contractEntity.address
-          ),
           entity: contractEntity,
         };
         contracts[crawler.contractId] = contract;
@@ -86,10 +100,14 @@ export class Web3EventCrawlersCronService extends BaseService {
       let toBlock = fromBlock + BigInt(provider.entity.blockRangePerCrawl);
       toBlock =
         toBlock > provider.lastBlockNumber ? provider.lastBlockNumber : toBlock;
-      const events = (await contract.service.getPastEvents(crawler.event, {
+      const events = await provider.service.getLogs<any, any, any, any, any>({
+        address: contract.entity.address,
+        event: contract.entity.abi.find(
+          (item: any) => item.type === 'event' && item.name === crawler.event
+        ),
         fromBlock: fromBlock,
         toBlock: toBlock,
-      })) as EventLog[];
+      });
 
       eventLogs.push(
         ...events.map((e) => ({
@@ -109,20 +127,18 @@ export class Web3EventCrawlersCronService extends BaseService {
       .into(Web3Event)
       .values(
         eventLogs.map(({ log, network, crawler }) => {
-          const data: any = {};
-          for (const key in log.returnValues) {
-            if (key !== '__length__' && Number.isNaN(parseInt(key))) {
-              const value = log.returnValues[key];
-              data[key] = typeof value === 'bigint' ? value.toString() : value;
-            }
+          const data: any = { ...(log as any).args };
+          for (const key in data) {
+            const value = data[key];
+            data[key] = typeof value === 'bigint' ? value.toString() : value;
           }
+
           return {
-            id: log.transactionHash,
-            blockHash: log.blockHash,
+            id: log.transactionHash || undefined,
+            blockHash: log.blockHash || undefined,
             blockNumber: log.blockNumber?.toString(),
             contractAddress: log.address,
-            event: log.event,
-            signature: log.signature,
+            event: (log as any).eventName,
             transactionIndex: log.transactionIndex?.toString(),
             logIndex: log.logIndex?.toString(),
             data: data,
