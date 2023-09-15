@@ -44,8 +44,8 @@ export abstract class ConsumeWeb3EventService extends BaseService {
 
   maxEventsPerConsume = 100;
 
-  private _contractConfig: any;
   private _publicClient: any;
+  private _crawler?: any;
 
   private async init() {
     const databaseService = await serviceContainer.getAsync(DatabaseService);
@@ -69,17 +69,17 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       transport: http(provider.url),
     });
 
-    this._contractConfig = {
-      address: crawler.contract.address,
-      abi: crawler.contract.abi,
-    };
+    this._crawler = crawler;
   }
 
   async getContractConfig(): Promise<{ abi: any; address: '0x${string}' }> {
-    if (!this._contractConfig) {
+    if (!this._crawler) {
       await this.init();
     }
-    return this._contractConfig;
+    return {
+      abi: this._crawler.contract.abi,
+      address: this._crawler.contract.address,
+    };
   }
 
   async getPublicClient(): Promise<PublicClient> {
@@ -87,6 +87,13 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       await this.init();
     }
     return this._publicClient;
+  }
+
+  async getCrawler(): Promise<Web3EventCrawler> {
+    if (!this._crawler) {
+      await this.init();
+    }
+    return this._crawler;
   }
 
   async handle() {
