@@ -38,7 +38,7 @@ export class GetWeb3EventConsumersApiService extends InjectDatabaseService {
 }
 
 @serverModule.injectable()
-export abstract class Web3EventConsumersService extends BaseService {
+export abstract class ConsumeWeb3EventService extends BaseService {
   abstract consume(event: Record<string, any>): Promise<void>;
   abstract crawlerId: string;
 
