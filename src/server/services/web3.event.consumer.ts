@@ -3,6 +3,7 @@ import {
   BaseService,
   DatabaseService,
   InjectDatabaseService,
+  runInTransaction,
   serviceContainer,
 } from '@roxavn/core/server';
 import { MoreThan } from 'typeorm';
@@ -118,22 +119,36 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       order: { blockNumber: 'ASC' },
     });
     if (events.length) {
+      let lastConsumeBlockNumber: string | undefined;
+      let error: any;
       for (const event of events) {
-        await this.consume(event.data);
+        try {
+          await runInTransaction(() => this.consume(event.data));
+          lastConsumeBlockNumber = event.blockNumber;
+        } catch (e) {
+          error = e;
+          break;
+        }
       }
       // update consumer
-      const lastConsumeBlockNumber = events[events.length - 1].blockNumber;
-      if (consumer) {
-        consumer.lastConsumeBlockNumber = lastConsumeBlockNumber;
-        await databaseService.manager.save(consumer);
-      } else {
-        consumer = new Web3EventConsumer();
-        consumer.crawlerId = this.crawlerId;
-        consumer.name = this.constructor.name;
-        consumer.lastConsumeBlockNumber = lastConsumeBlockNumber;
-        await databaseService.manager
-          .getRepository(Web3EventConsumer)
-          .insert(consumer);
+      if (lastConsumeBlockNumber) {
+        await runInTransaction(async () => {
+          if (consumer) {
+            consumer.lastConsumeBlockNumber = lastConsumeBlockNumber as string;
+            await databaseService.manager.save(consumer);
+          } else {
+            consumer = new Web3EventConsumer();
+            consumer.crawlerId = this.crawlerId;
+            consumer.name = this.constructor.name;
+            consumer.lastConsumeBlockNumber = lastConsumeBlockNumber as string;
+            await databaseService.manager
+              .getRepository(Web3EventConsumer)
+              .insert(consumer);
+          }
+        });
+      }
+      if (error) {
+        throw error;
       }
     }
   }
