@@ -3,7 +3,7 @@ import {
   BaseService,
   DatabaseService,
   InjectDatabaseService,
-  runInTransaction,
+  transactional,
   serviceContainer,
 } from '@roxavn/core/server';
 import { MoreThan } from 'typeorm';
@@ -123,7 +123,9 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       let error: any;
       for (const event of events) {
         try {
-          await runInTransaction(() => this.consume(event.data));
+          await transactional.runInTransaction(() => this.consume(event.data), {
+            propagation: transactional.Propagation.NESTED,
+          });
           lastConsumeBlockNumber = event.blockNumber;
         } catch (e) {
           error = e;
@@ -132,20 +134,25 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       }
       // update consumer
       if (lastConsumeBlockNumber) {
-        await runInTransaction(async () => {
-          if (consumer) {
-            consumer.lastConsumeBlockNumber = lastConsumeBlockNumber as string;
-            await databaseService.manager.save(consumer);
-          } else {
-            consumer = new Web3EventConsumer();
-            consumer.crawlerId = this.crawlerId;
-            consumer.name = this.constructor.name;
-            consumer.lastConsumeBlockNumber = lastConsumeBlockNumber as string;
-            await databaseService.manager
-              .getRepository(Web3EventConsumer)
-              .insert(consumer);
-          }
-        });
+        await transactional.runInTransaction(
+          async () => {
+            if (consumer) {
+              consumer.lastConsumeBlockNumber =
+                lastConsumeBlockNumber as string;
+              await databaseService.manager.save(consumer);
+            } else {
+              consumer = new Web3EventConsumer();
+              consumer.crawlerId = this.crawlerId;
+              consumer.name = this.constructor.name;
+              consumer.lastConsumeBlockNumber =
+                lastConsumeBlockNumber as string;
+              await databaseService.manager
+                .getRepository(Web3EventConsumer)
+                .insert(consumer);
+            }
+          },
+          { propagation: transactional.Propagation.NESTED }
+        );
       }
       if (error) {
         throw error;
