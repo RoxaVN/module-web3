@@ -21,7 +21,7 @@
   "editEventCrawler": "Edit event crawlers {{ event }}",
   "blockRangePerCrawl": "Block range",
   "delayBlockCount": "Delay block",
-  "lastBlockNumber": "Last block number",
+  "lastEventId": "Last event id",
   "Error": {
     "NotFoundProviderException": "Not found provider of network {{ networkId }}"
   },

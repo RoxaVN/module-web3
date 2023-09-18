@@ -21,7 +21,7 @@ const Page = () => {
       columns={{
         name: { label: tCore('name') },
         crawlerId: { label: t('crawler') },
-        lastConsumeBlockNumber: { label: t('lastBlockNumber') },
+        lastConsumeEventId: { label: t('lastEventId') },
         updatedDate: {
           label: tCore('updatedDate'),
           render: utils.Render.relativeTime,

@@ -21,7 +21,7 @@
   "editEventCrawler": "Sửa trình thu thập sự kiện {{ event }}",
   "blockRangePerCrawl": "Phạm vi khối",
   "delayBlockCount": "Số khối trễ",
-  "lastBlockNumber": "Số khối cuối cùng",
+  "lastEventId": "Id sự kiện cuối cùng",
   "Error": {
     "NotFoundProviderException": "Không tìm thấy nhà cung cấp cho mạng {{ networkId }}"
   },

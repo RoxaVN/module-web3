@@ -20,7 +20,7 @@ export class Web3EventConsumer {
   name: string;
 
   @Column('bigint')
-  lastConsumeBlockNumber: string;
+  lastConsumeEventId: string;
 
   @Column('bigint')
   crawlerId: string;

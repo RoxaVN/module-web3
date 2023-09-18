@@ -104,9 +104,8 @@ export class Web3EventCrawlersCronService extends BaseService {
     }
 
     await this.databaseService.manager
-      .createQueryBuilder()
+      .createQueryBuilder(Web3Event, 'web3Event')
       .insert()
-      .into(Web3Event)
       .values(
         eventLogs.map(({ log, network, crawler }) => {
           const data: any = { ...(log as any).args };
@@ -116,7 +115,7 @@ export class Web3EventCrawlersCronService extends BaseService {
           }
 
           return {
-            id: log.transactionHash || undefined,
+            transactionHash: log.transactionHash || undefined,
             blockHash: log.blockHash || undefined,
             blockNumber: log.blockNumber?.toString(),
             contractAddress: log.address,

@@ -13,7 +13,7 @@ import { permissions, scopes } from '../access.js';
 const web3EventConsumerSource = new ApiSource<{
   id: string;
   name: string;
-  lastConsumeBlockNumber: string;
+  lastConsumeEventId: string;
   crawlerId: string;
   metadata?: Record<string, any>;
   createdDate: Date;

@@ -4,14 +4,14 @@ import {
   Entity,
   Index,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   type Relation,
 } from 'typeorm';
 import { Web3EventCrawler } from './web3.event.crawler.entity.js';
 
 @Entity()
 export class Web3Event {
-  @PrimaryColumn('text')
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: string;
 
   @Column('text')
@@ -38,6 +38,9 @@ export class Web3Event {
 
   @Column('bigint', { nullable: true })
   transactionIndex?: string;
+
+  @Column('text', { nullable: true })
+  transactionHash?: string;
 
   @Column('bigint', { nullable: true })
   logIndex?: string;

@@ -109,7 +109,7 @@ export abstract class ConsumeWeb3EventService extends BaseService {
           name: this.constructor.name,
         },
       });
-    const fromBlock = consumer ? consumer.lastConsumeBlockNumber : '0';
+    const fromBlock = consumer ? consumer.lastConsumeEventId : '0';
     const events = await databaseService.manager.getRepository(Web3Event).find({
       where: {
         blockNumber: MoreThan(fromBlock),
@@ -119,33 +119,31 @@ export abstract class ConsumeWeb3EventService extends BaseService {
       order: { blockNumber: 'ASC' },
     });
     if (events.length) {
-      let lastConsumeBlockNumber: string | undefined;
+      let lastConsumeEventId: string | undefined;
       let error: any;
       for (const event of events) {
         try {
           await transactional.runInTransaction(() => this.consume(event.data), {
             propagation: transactional.Propagation.NESTED,
           });
-          lastConsumeBlockNumber = event.blockNumber;
+          lastConsumeEventId = event.id;
         } catch (e) {
           error = e;
           break;
         }
       }
       // update consumer
-      if (lastConsumeBlockNumber) {
+      if (lastConsumeEventId) {
         await transactional.runInTransaction(
           async () => {
             if (consumer) {
-              consumer.lastConsumeBlockNumber =
-                lastConsumeBlockNumber as string;
+              consumer.lastConsumeEventId = lastConsumeEventId as string;
               await databaseService.manager.save(consumer);
             } else {
               consumer = new Web3EventConsumer();
               consumer.crawlerId = this.crawlerId;
               consumer.name = this.constructor.name;
-              consumer.lastConsumeBlockNumber =
-                lastConsumeBlockNumber as string;
+              consumer.lastConsumeEventId = lastConsumeEventId as string;
               await databaseService.manager
                 .getRepository(Web3EventConsumer)
                 .insert(consumer);
