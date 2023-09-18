@@ -3,7 +3,6 @@ import {
   BaseService,
   DatabaseService,
   InjectDatabaseService,
-  transactional,
   serviceContainer,
 } from '@roxavn/core/server';
 import { MoreThan } from 'typeorm';
@@ -43,7 +42,7 @@ export abstract class ConsumeWeb3EventService extends BaseService {
   abstract consume(event: Record<string, any>): Promise<void>;
   abstract crawlerId: string;
 
-  maxEventsPerConsume = 100;
+  maxEventsPerConsume = 10;
 
   private _publicClient: any;
   private _crawler?: any;
@@ -109,51 +108,34 @@ export abstract class ConsumeWeb3EventService extends BaseService {
           name: this.constructor.name,
         },
       });
-    const fromBlock = consumer ? consumer.lastConsumeEventId : '0';
+    const fromEvent = consumer ? consumer.lastConsumeEventId : '0';
     const events = await databaseService.manager.getRepository(Web3Event).find({
       where: {
-        blockNumber: MoreThan(fromBlock),
+        id: MoreThan(fromEvent),
         crawlerId: this.crawlerId,
       },
       take: this.maxEventsPerConsume,
       order: { blockNumber: 'ASC' },
     });
     if (events.length) {
-      let lastConsumeEventId: string | undefined;
-      let error: any;
       for (const event of events) {
-        try {
-          await transactional.runInTransaction(() => this.consume(event.data), {
-            propagation: transactional.Propagation.NESTED,
-          });
-          lastConsumeEventId = event.id;
-        } catch (e) {
-          error = e;
-          break;
-        }
+        await this.consume(event.data);
       }
       // update consumer
-      if (lastConsumeEventId) {
-        await transactional.runInTransaction(
-          async () => {
-            if (consumer) {
-              consumer.lastConsumeEventId = lastConsumeEventId as string;
-              await databaseService.manager.save(consumer);
-            } else {
-              consumer = new Web3EventConsumer();
-              consumer.crawlerId = this.crawlerId;
-              consumer.name = this.constructor.name;
-              consumer.lastConsumeEventId = lastConsumeEventId as string;
-              await databaseService.manager
-                .getRepository(Web3EventConsumer)
-                .insert(consumer);
-            }
-          },
-          { propagation: transactional.Propagation.NESTED }
-        );
-      }
-      if (error) {
-        throw error;
+      const lastConsumeEventId = events[events.length - 1].id;
+      if (consumer) {
+        consumer.lastConsumeEventId = lastConsumeEventId;
+        await databaseService.manager
+          .getRepository(Web3EventConsumer)
+          .save(consumer);
+      } else {
+        consumer = new Web3EventConsumer();
+        consumer.crawlerId = this.crawlerId;
+        consumer.name = this.constructor.name;
+        consumer.lastConsumeEventId = lastConsumeEventId;
+        await databaseService.manager
+          .getRepository(Web3EventConsumer)
+          .insert(consumer);
       }
     }
   }
