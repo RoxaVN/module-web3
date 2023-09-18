@@ -132,7 +132,9 @@ export class Web3EventCrawlersCronService extends BaseService {
       .execute();
 
     // save crawlers
-    await this.databaseService.manager.save(crawlers);
+    await this.databaseService.manager
+      .getRepository(Web3EventCrawler)
+      .save(crawlers);
 
     return {};
   }
