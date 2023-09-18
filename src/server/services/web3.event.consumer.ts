@@ -42,7 +42,7 @@ export abstract class ConsumeWeb3EventService extends BaseService {
   abstract consume(event: Record<string, any>): Promise<void>;
   abstract crawlerId: string;
 
-  maxEventsPerConsume = 10;
+  maxEventsPerConsume = 100;
 
   private _publicClient: any;
   private _crawler?: any;
