@@ -1,32 +1,26 @@
-import { EthereumClient } from '@web3modal/ethereum';
-import { Web3Modal } from '@web3modal/react';
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react';
+
 import { useMemo } from 'react';
-import { WagmiConfig, type Config } from 'wagmi';
+import { WagmiConfig, type Chain } from 'wagmi';
 
 export interface Web3ProviderProps {
   children: React.ReactElement;
-  wagmiConfig: Config;
   projectId: string;
+  chains: Chain[];
 }
 
 export function Web3Provider({
   children,
-  wagmiConfig,
   projectId,
+  chains,
 }: Web3ProviderProps) {
-  const ethereumClient = useMemo(() => {
-    return new EthereumClient(
-      wagmiConfig,
-      wagmiConfig.publicClient.chains || []
-    );
-  }, [wagmiConfig]);
+  const wagmiConfig = useMemo(() => {
+    const result = defaultWagmiConfig({ chains, projectId });
+    createWeb3Modal({ wagmiConfig: result, projectId, chains });
+    return result;
+  }, [projectId, chains]);
 
-  return (
-    <>
-      <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>
-      <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
-    </>
-  );
+  return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
 }
 
 // declare module '@roxavn/core/web' {
