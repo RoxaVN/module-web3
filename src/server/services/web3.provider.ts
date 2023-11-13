@@ -28,6 +28,9 @@ export class GetWeb3ProvidersApiService extends InjectDatabaseService {
     const [items, totalItems] = await this.entityManager
       .getRepository(Web3Provider)
       .findAndCount({
+        where: {
+          networkId: request.networkId,
+        },
         take: pageSize,
         skip: (page - 1) * pageSize,
       });

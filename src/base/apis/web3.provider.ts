@@ -24,6 +24,9 @@ const web3ProviderSource = new ApiSource<{
 }>([scopes.Web3Provider], baseModule);
 
 class GetWeb3ProvidersRequest extends ExactProps<GetWeb3ProvidersRequest> {
+  @IsOptional()
+  networkId?: string;
+
   @Min(1)
   @TransformNumber()
   @IsOptional()
