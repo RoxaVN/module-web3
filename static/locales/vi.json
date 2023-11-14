@@ -7,6 +7,7 @@
   "networkId": "Id mạng",
   "contracts": "Hợp đồng",
   "contract": "Hợp đồng",
+  "contractId": "Id hợp đồng",
   "addContract": "thêm hợp đồng",
   "editContract": "Sửa hợp đồng",
   "contractAbi": "ABI của hợp đồng",
