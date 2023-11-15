@@ -16,6 +16,7 @@
   "events": "Events",
   "block": "Block",
   "transaction": "Transaction",
+  "transactionHash": "Transaction hash",
   "eventConsumers": "Event consumers",
   "crawler": "Crawler",
   "eventCrawlers": "Event crawlers",

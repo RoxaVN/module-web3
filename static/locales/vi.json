@@ -16,6 +16,7 @@
   "events": "Sự kiện",
   "block": "Khối",
   "transaction": "Giao dịch",
+  "transactionHash": "Hash giao dịch",
   "eventConsumers": "Xử lý sự kiện",
   "crawler": "Trình thu thập",
   "eventCrawlers": "Trình thu thập sự kiện",

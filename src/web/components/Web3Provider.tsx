@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { WagmiConfig, type Chain } from 'wagmi';
 
 export interface Web3ProviderProps {
-  children: React.ReactElement;
+  children: React.ReactNode;
   projectId: string;
   chains: Chain[];
 }
