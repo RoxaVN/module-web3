@@ -8,6 +8,7 @@
   "contracts": "Contracts",
   "contract": "Contract",
   "contractId": "Contract id",
+  "contractAddress": "Contract address",
   "addContract": "Add contract",
   "editContract": "Edit contract",
   "contractAbi": "Contract ABI",
