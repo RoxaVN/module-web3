@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/RoxaVN/roxavn/compare/v0.1.3...v0.1.2) (2023-11-21)
+
+### Features
+
+- add contractId translation ([dd65906](https://github.com/RoxaVN/roxavn/commit/dd65906723c851d77944dcb5b46e4df467793248))
+- add networkId param to GetWeb3ProvidersRequest ([7747fa1](https://github.com/RoxaVN/roxavn/commit/7747fa10f67fd6b96e5a28d01241d3bcad2c0904))
+
 ### [0.1.3](https://github.com/RoxaVN/roxavn/compare/v0.1.2...v0.1.3) (2023-11-11)
 
 ### Features
