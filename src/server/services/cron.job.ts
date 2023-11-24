@@ -65,8 +65,7 @@ export class Web3EventCrawlersCronService extends BaseService {
           provider = {
             service: web3,
             entity: providerEntity,
-            lastBlockNumber:
-              lastBlockNumber - BigInt(providerEntity.delayBlockCount),
+            lastBlockNumber: lastBlockNumber,
           };
           providers[contractEntity.networkId] = provider;
         }
@@ -76,7 +75,11 @@ export class Web3EventCrawlersCronService extends BaseService {
         contracts[crawler.contractId] = contract;
       } else {
         provider = providers[contract.entity.networkId];
+        provider.lastBlockNumber = await provider.service.getBlockNumber();
       }
+
+      // delay last block number
+      provider.lastBlockNumber -= BigInt(provider.entity.delayBlockCount);
 
       const fromBlock = BigInt(crawler.lastCrawlBlockNumber);
       let toBlock = fromBlock + BigInt(provider.entity.blockRangePerCrawl);
