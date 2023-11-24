@@ -21,13 +21,14 @@ const Page = () => {
       api={web3EventApi.getMany}
       header={t('events')}
       columns={{
-        id: {
-          label: tCore('id'),
-          render: (value) => <StringCopier value={value} />,
-        },
+        id: { label: tCore('id') },
         contractAddress: {
           label: t('contract'),
           render: (value) => <StringCopier value={value} />,
+        },
+        transactionHash: {
+          label: t('transactionHash'),
+          render: (value) => value && <StringCopier value={value} />,
         },
         event: { label: t('event') },
         networkId: { label: t('networkId') },

@@ -18,6 +18,7 @@ const web3EventSource = new ApiSource<{
   blockNumber: string;
   blockHash: string;
   transactionIndex?: string;
+  transactionHash?: string;
   logIndex?: string;
   data: Record<string, any>;
   createdDate: Date;
