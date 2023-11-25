@@ -45,53 +45,47 @@ export abstract class ConsumeWeb3EventService extends BaseService {
   maxEventsPerConsume = 100;
 
   private _publicClient: any;
-  private _crawler?: any;
+  private _crawler?: Web3EventCrawler;
 
-  private async init() {
-    const databaseService = await serviceContainer.getAsync(DatabaseService);
-    const crawler = await databaseService.manager
-      .getRepository(Web3EventCrawler)
-      .findOne({
-        relations: { contract: true },
-        where: { id: this.crawlerId },
-      });
-    if (!crawler) {
-      throw new NotFoundException();
-    }
-    const provider = await databaseService.manager
-      .getRepository(Web3Provider)
-      .findOne({ where: { networkId: crawler.contract.networkId } });
-    if (!provider) {
-      throw new NotFoundException();
-    }
-
-    this._publicClient = createPublicClient({
-      transport: http(provider.url),
-    });
-
-    this._crawler = crawler;
-  }
-
-  async getContractConfig(): Promise<{ abi: any; address: '0x${string}' }> {
-    if (!this._crawler) {
-      await this.init();
-    }
+  async getContractConfig(): Promise<{ abi: any; address: `0x${string}` }> {
+    const crawler = await this.getCrawler();
     return {
-      abi: this._crawler.contract.abi,
-      address: this._crawler.contract.address,
+      abi: crawler.contract.abi,
+      address: crawler.contract.address,
     };
   }
 
   async getPublicClient(): Promise<PublicClient> {
     if (!this._publicClient) {
-      await this.init();
+      const crawler = await this.getCrawler();
+      const databaseService = await serviceContainer.getAsync(DatabaseService);
+      const provider = await databaseService.manager
+        .getRepository(Web3Provider)
+        .findOne({ where: { networkId: crawler.contract.networkId } });
+      if (!provider) {
+        throw new NotFoundException();
+      }
+
+      this._publicClient = createPublicClient({
+        transport: http(provider.url),
+      });
     }
     return this._publicClient;
   }
 
   async getCrawler(): Promise<Web3EventCrawler> {
     if (!this._crawler) {
-      await this.init();
+      const databaseService = await serviceContainer.getAsync(DatabaseService);
+      const crawler = await databaseService.manager
+        .getRepository(Web3EventCrawler)
+        .findOne({
+          relations: { contract: true },
+          where: { id: this.crawlerId },
+        });
+      if (!crawler) {
+        throw new NotFoundException();
+      }
+      this._crawler = crawler;
     }
     return this._crawler;
   }
