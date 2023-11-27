@@ -5,11 +5,13 @@ import {
   Index,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   type Relation,
 } from 'typeorm';
 import { Web3EventCrawler } from './web3.event.crawler.entity.js';
 
 @Entity()
+@Unique(['blockNumber', 'logIndex', 'networkId'])
 export class Web3Event {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: string;

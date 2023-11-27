@@ -6,12 +6,12 @@ import {
   PrimaryGeneratedColumn,
   type Relation,
   UpdateDateColumn,
-  Index,
+  Unique,
 } from 'typeorm';
 import { Web3EventCrawler } from './web3.event.crawler.entity.js';
 
 @Entity()
-@Index(['address', 'networkId'], { unique: true })
+@Unique(['address', 'networkId'])
 export class Web3Contract {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: string;

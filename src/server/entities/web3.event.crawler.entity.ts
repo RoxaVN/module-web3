@@ -2,19 +2,19 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   type Relation,
   UpdateDateColumn,
   OneToMany,
+  Unique,
 } from 'typeorm';
 import { Web3Contract } from './web3.contract.entity.js';
 import { Web3Event } from './web3.event.entity.js';
 import { Web3EventConsumer } from './web3.event.consumer.entity.js';
 
 @Entity()
-@Index(['event', 'contractId'], { unique: true })
+@Unique(['event', 'contractId'])
 export class Web3EventCrawler {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
   id: string;

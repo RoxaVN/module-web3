@@ -13,11 +13,9 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
         "metadata" jsonb,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         "updatedDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+        CONSTRAINT "UQ_d077f3de0f03e0976f0a6933548" UNIQUE ("address", "networkId"),
         CONSTRAINT "PK_ae0b609621cb4be74ae2ba8071a" PRIMARY KEY ("id")
       )
-      `);
-    await queryRunner.query(`
-      CREATE UNIQUE INDEX "IDX_d077f3de0f03e0976f0a693354" ON "web3_contract" ("address", "networkId")
       `);
     await queryRunner.query(`
       CREATE TABLE "web3_event" (
@@ -33,6 +31,7 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
         "logIndex" bigint,
         "data" jsonb NOT NULL,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+        CONSTRAINT "UQ_4255d89a93e10c3318a00249ef9" UNIQUE ("blockNumber", "logIndex", "networkId"),
         CONSTRAINT "PK_a39ee42b7ad72c0e83367a8cdb1" PRIMARY KEY ("id")
       )
       `);
@@ -48,11 +47,9 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
         "metadata" jsonb,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         "updatedDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+        CONSTRAINT "UQ_57169e1260ee06495a2c15e1d59" UNIQUE ("name", "crawlerId"),
         CONSTRAINT "PK_27991885576683e9b7864cc63ed" PRIMARY KEY ("id")
       )
-      `);
-    await queryRunner.query(`
-      CREATE UNIQUE INDEX "IDX_57169e1260ee06495a2c15e1d5" ON "web3_event_consumer" ("name", "crawlerId")
       `);
     await queryRunner.query(`
       CREATE TABLE "web3_event_crawler" (
@@ -64,11 +61,9 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
         "metadata" jsonb,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
         "updatedDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+        CONSTRAINT "UQ_7f043e634f74c11a61b624f3895" UNIQUE ("event", "contractId"),
         CONSTRAINT "PK_b2f221984d402825bdca2bb6787" PRIMARY KEY ("id")
       )
-      `);
-    await queryRunner.query(`
-      CREATE UNIQUE INDEX "IDX_7f043e634f74c11a61b624f389" ON "web3_event_crawler" ("event", "contractId")
       `);
     await queryRunner.query(`
       CREATE TABLE "web3_provider" (
@@ -111,13 +106,7 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
       DROP TABLE "web3_provider"
       `);
     await queryRunner.query(`
-      DROP INDEX "public"."IDX_7f043e634f74c11a61b624f389"
-      `);
-    await queryRunner.query(`
       DROP TABLE "web3_event_crawler"
-      `);
-    await queryRunner.query(`
-      DROP INDEX "public"."IDX_57169e1260ee06495a2c15e1d5"
       `);
     await queryRunner.query(`
       DROP TABLE "web3_event_consumer"
@@ -127,9 +116,6 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
       `);
     await queryRunner.query(`
       DROP TABLE "web3_event"
-      `);
-    await queryRunner.query(`
-      DROP INDEX "public"."IDX_d077f3de0f03e0976f0a693354"
       `);
     await queryRunner.query(`
       DROP TABLE "web3_contract"
