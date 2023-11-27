@@ -28,13 +28,11 @@ export class Web3EventCrawlersCronService extends BaseService {
       .find({
         where: { isActive: true },
       });
-    const contracts: Record<
-      string,
-      { entity: Web3Contract; lastBlockNumber: bigint }
-    > = {};
+    const contracts: Record<string, { entity: Web3Contract }> = {};
     type ProviderItem = {
       service: PublicClient;
       entity: Web3Provider;
+      lastBlockNumber: bigint;
     };
     const providers: Record<string, ProviderItem> = {};
     const eventLogs: {
@@ -63,29 +61,31 @@ export class Web3EventCrawlersCronService extends BaseService {
           const web3 = createPublicClient({
             transport: http(providerEntity.url),
           });
+          const lastBlockNumber = await web3.getBlockNumber();
           provider = {
             service: web3,
             entity: providerEntity,
+            lastBlockNumber:
+              lastBlockNumber - BigInt(providerEntity.delayBlockCount),
           };
           providers[contractEntity.networkId] = provider;
         }
         contract = {
           entity: contractEntity,
-          lastBlockNumber: await provider.service.getBlockNumber(),
         };
         contracts[crawler.contractId] = contract;
       } else {
         provider = providers[contract.entity.networkId];
-        contract.lastBlockNumber = await provider.service.getBlockNumber();
       }
 
-      // delay last block number
-      contract.lastBlockNumber -= BigInt(provider.entity.delayBlockCount);
-
       const fromBlock = BigInt(crawler.lastCrawlBlockNumber) + BigInt(1);
-      let toBlock = fromBlock + BigInt(provider.entity.blockRangePerCrawl);
-      toBlock =
-        toBlock > contract.lastBlockNumber ? contract.lastBlockNumber : toBlock;
+      let toBlock = fromBlock + BigInt(provider.entity.blockRangePerCrawl - 1);
+      if (toBlock > provider.lastBlockNumber) {
+        const lastBlockNumber = await provider.service.getBlockNumber();
+        provider.lastBlockNumber =
+          lastBlockNumber - BigInt(provider.entity.delayBlockCount);
+        toBlock = provider.lastBlockNumber;
+      }
       const events = await provider.service.getLogs<any, any, any, any, any>({
         address: contract.entity.address,
         event: contract.entity.abi.find(
