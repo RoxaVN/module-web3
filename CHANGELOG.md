@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/RoxaVN/roxavn/compare/v0.1.4...v0.1.5) (2023-12-06)
+
+### Features
+
+- add unique (blockNumber, logIndex, networkId) for Web3Event table ([8d499e6](https://github.com/RoxaVN/roxavn/commit/8d499e6a513a4af79e127025b627add270da718f))
+
+### Bug Fixes
+
+- correct lastBlockNumber ([c39346a](https://github.com/RoxaVN/roxavn/commit/c39346a7e3af577a2716ac3e29bbe176b0353ce0))
+- display transactionHash ([c8b731f](https://github.com/RoxaVN/roxavn/commit/c8b731f1f3f12e08ec9960fcfa2e7cb5b887f5fc))
+- save lastBlockNumber for contract instead of provider ([d730284](https://github.com/RoxaVN/roxavn/commit/d730284cfd430ad78616650e9983b07fc74ec364))
+- save lastBlockNumber in provider ([6377e08](https://github.com/RoxaVN/roxavn/commit/6377e08b6666eb101dec9f5b5d1928f323ea5f44))
+- wrong return type of getContractConfig() ([401689d](https://github.com/RoxaVN/roxavn/commit/401689d23a1c83c43039df274bf3df6fac4722a4))
+
 ### [0.1.4](https://github.com/RoxaVN/roxavn/compare/v0.1.3...v0.1.4) (2023-11-21)
 
 ### Features
