@@ -1,3 +1,4 @@
+import { TextInput } from '@mantine/core';
 import {
   ApiTable,
   IfCanAccessApi,
@@ -20,6 +21,24 @@ const Page = () => {
     <ApiTable
       api={web3EventApi.getMany}
       header={t('events')}
+      filters={[
+        {
+          name: 'contractAddress',
+          input: <TextInput label={t('contract')} />,
+        },
+        {
+          name: 'networkId',
+          input: <TextInput label={t('networkId')} />,
+        },
+        {
+          name: 'transactionHash',
+          input: <TextInput label={t('transactionHash')} />,
+        },
+        {
+          name: 'event',
+          input: <TextInput label={t('event')} />,
+        },
+      ]}
       columns={{
         id: { label: tCore('id') },
         contractAddress: {

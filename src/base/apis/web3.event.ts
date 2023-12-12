@@ -25,6 +25,18 @@ const web3EventSource = new ApiSource<{
 }>([scopes.Web3Event], baseModule);
 
 class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
+  @IsOptional()
+  public readonly transactionHash?: string;
+
+  @IsOptional()
+  public readonly contractAddress?: string;
+
+  @IsOptional()
+  public readonly event?: string;
+
+  @IsOptional()
+  public readonly networkId?: string;
+
   @Min(1)
   @TransformNumber()
   @IsOptional()

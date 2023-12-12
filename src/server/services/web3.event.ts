@@ -14,6 +14,12 @@ export class GetWeb3EventsApiService extends InjectDatabaseService {
     const [items, totalItems] = await this.entityManager
       .getRepository(Web3Event)
       .findAndCount({
+        where: {
+          transactionHash: request.transactionHash,
+          contractAddress: request.contractAddress,
+          networkId: request.networkId,
+          event: request.event,
+        },
         take: pageSize,
         skip: (page - 1) * pageSize,
         order: { blockNumber: 'DESC' },

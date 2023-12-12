@@ -11,7 +11,7 @@ import { serverModule } from '../module.js';
 import { GetWeb3ContractApiService } from './web3.contract.js';
 import { NotFoundProviderException } from '../../base/index.js';
 
-@serverModule.useIntervalJob(45000)
+@serverModule.useIntervalJob(1000)
 export class Web3EventCrawlersCronService extends BaseService {
   constructor(
     @inject(DatabaseService)
