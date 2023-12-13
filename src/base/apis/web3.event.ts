@@ -8,7 +8,7 @@ import {
 } from '@roxavn/core/base';
 
 import { baseModule } from '../module.js';
-import { permissions, scopes } from '../access.js';
+import { scopes } from '../access.js';
 
 const web3EventSource = new ApiSource<{
   id: string;
@@ -52,6 +52,5 @@ class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
 export const web3EventApi = {
   getMany: web3EventSource.getMany({
     validator: GetWeb3EventsRequest,
-    permission: permissions.ReadWeb3Events,
   }),
 };
