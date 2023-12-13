@@ -11,8 +11,17 @@ import { serverModule } from '../module.js';
 import { GetWeb3ContractApiService } from './web3.contract.js';
 import { NotFoundProviderException } from '../../base/index.js';
 
+type ProviderItem = {
+  service: PublicClient;
+  entity: Web3Provider;
+  lastBlockNumber: bigint;
+};
+
 @serverModule.useIntervalJob(45000)
 export class Web3EventCrawlersCronService extends BaseService {
+  contracts: Record<string, { entity: Web3Contract }> = {};
+  providers: Record<string, ProviderItem> = {};
+
   constructor(
     @inject(DatabaseService)
     protected databaseService: DatabaseService,
@@ -28,13 +37,7 @@ export class Web3EventCrawlersCronService extends BaseService {
       .find({
         where: { isActive: true },
       });
-    const contracts: Record<string, { entity: Web3Contract }> = {};
-    type ProviderItem = {
-      service: PublicClient;
-      entity: Web3Provider;
-      lastBlockNumber: bigint;
-    };
-    const providers: Record<string, ProviderItem> = {};
+
     const eventLogs: {
       log: Log;
       network: string;
@@ -42,13 +45,13 @@ export class Web3EventCrawlersCronService extends BaseService {
     }[] = [];
 
     for (const crawler of crawlers) {
-      let contract = contracts[crawler.contractId];
+      let contract = this.contracts[crawler.contractId];
       let provider: ProviderItem;
       if (!contract) {
         const contractEntity = await this.getWeb3ContractApiService.handle({
           web3contractId: crawler.contractId,
         });
-        provider = providers[contractEntity.networkId];
+        provider = this.providers[contractEntity.networkId];
         if (!provider) {
           const providerEntity = await this.databaseService.manager
             .getRepository(Web3Provider)
@@ -68,14 +71,14 @@ export class Web3EventCrawlersCronService extends BaseService {
             lastBlockNumber:
               lastBlockNumber - BigInt(providerEntity.delayBlockCount),
           };
-          providers[contractEntity.networkId] = provider;
+          this.providers[contractEntity.networkId] = provider;
         }
         contract = {
           entity: contractEntity,
         };
-        contracts[crawler.contractId] = contract;
+        this.contracts[crawler.contractId] = contract;
       } else {
-        provider = providers[contract.entity.networkId];
+        provider = this.providers[contract.entity.networkId];
       }
 
       const fromBlock = BigInt(crawler.lastCrawlBlockNumber) + BigInt(1);
@@ -107,31 +110,42 @@ export class Web3EventCrawlersCronService extends BaseService {
       crawler.lastCrawlBlockNumber = toBlock.toString();
     }
 
+    const items = await Promise.all(
+      eventLogs.map(async ({ log, network, crawler }) => {
+        const data: any = { ...(log as any).args };
+        for (const key in data) {
+          const value = data[key];
+          data[key] = typeof value === 'bigint' ? value.toString() : value;
+        }
+
+        const result: Partial<Web3Event> = {
+          transactionHash: log.transactionHash || undefined,
+          blockHash: log.blockHash as string,
+          blockNumber: log.blockNumber?.toString() as string,
+          contractAddress: log.address,
+          event: (log as any).eventName,
+          transactionIndex: log.transactionIndex?.toString(),
+          logIndex: log.logIndex?.toString(),
+          data: data,
+          networkId: network,
+          crawlerId: crawler,
+        };
+
+        if (log.blockNumber) {
+          const block = await this.providers[network].service.getBlock({
+            blockNumber: log.blockNumber,
+          });
+          result.createdDate = new Date(Number(block.timestamp) * 1000);
+        }
+
+        return result;
+      })
+    );
+
     await this.databaseService.manager
       .createQueryBuilder(Web3Event, 'web3Event')
       .insert()
-      .values(
-        eventLogs.map(({ log, network, crawler }) => {
-          const data: any = { ...(log as any).args };
-          for (const key in data) {
-            const value = data[key];
-            data[key] = typeof value === 'bigint' ? value.toString() : value;
-          }
-
-          return {
-            transactionHash: log.transactionHash || undefined,
-            blockHash: log.blockHash || undefined,
-            blockNumber: log.blockNumber?.toString(),
-            contractAddress: log.address,
-            event: (log as any).eventName,
-            transactionIndex: log.transactionIndex?.toString(),
-            logIndex: log.logIndex?.toString(),
-            data: data,
-            networkId: network,
-            crawlerId: crawler,
-          };
-        })
-      )
+      .values(items)
       .orIgnore()
       .execute();
 
