@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/RoxaVN/roxavn/compare/v0.1.5...v0.1.6) (2023-12-13)
+
+### Features
+
+- add params to GetWeb3EventsRequest ([cdfb7df](https://github.com/RoxaVN/roxavn/commit/cdfb7dfef2fad7d50e201aa6a8246d73591befe0))
+- add shortenAddress() ([71574e3](https://github.com/RoxaVN/roxavn/commit/71574e364e9d663c1207e098411b3ad7ea5b98cf))
+
+### Bug Fixes
+
+- correct interval time ([6cdfea5](https://github.com/RoxaVN/roxavn/commit/6cdfea561b6da6395df63a85d73f9ece40ffdc30))
+
 ### [0.1.5](https://github.com/RoxaVN/roxavn/compare/v0.1.4...v0.1.5) (2023-12-06)
 
 ### Features
