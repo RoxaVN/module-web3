@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/RoxaVN/roxavn/compare/v0.1.6...v0.1.7) (2023-12-15)
+
+### Features
+
+- add eventFilters to GetWeb3EventsRequest ([0032fb9](https://github.com/RoxaVN/roxavn/commit/0032fb943a3a422ca48259fbef5b1340abd6542b))
+
+### Bug Fixes
+
+- wrong createdDate of event ([b43b3dc](https://github.com/RoxaVN/roxavn/commit/b43b3dc24bf14086d7f5d7f0ee7681665a6a2738))
+
 ### [0.1.6](https://github.com/RoxaVN/roxavn/compare/v0.1.5...v0.1.6) (2023-12-13)
 
 ### Features
