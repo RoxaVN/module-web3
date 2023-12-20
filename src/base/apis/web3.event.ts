@@ -1,6 +1,7 @@
 import {
   ApiSource,
   ArrayMaxSize,
+  type AttributeFilters,
   ExactProps,
   IsOptional,
   Max,
@@ -26,22 +27,11 @@ const web3EventSource = new ApiSource<{
   createdDate: Date;
 }>([scopes.Web3Event], baseModule);
 
-export interface EventFilterItem {
-  name: string;
-  value: any;
-  operator?:
-    | 'LessThan'
-    | 'LessThanOrEqual'
-    | 'MoreThan'
-    | 'MoreThanOrEqual'
-    | 'In';
-}
-
 class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
   @ArrayMaxSize(10)
   @TransformJson()
   @IsOptional()
-  public readonly eventFilters?: Array<EventFilterItem>;
+  public readonly eventFilters?: AttributeFilters;
 
   @IsOptional()
   public readonly transactionHash?: string;

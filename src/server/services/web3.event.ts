@@ -1,5 +1,5 @@
 import { InferApiRequest } from '@roxavn/core/base';
-import { InjectDatabaseService } from '@roxavn/core/server';
+import { InjectDatabaseService, databaseUtils } from '@roxavn/core/server';
 
 import { web3EventApi } from '../../base/index.js';
 import { Web3Event } from '../entities/index.js';
@@ -36,33 +36,14 @@ export class GetWeb3EventsApiService extends InjectDatabaseService {
       });
     }
 
-    request.eventFilters?.map((filter, index) => {
-      const paramName = `${filter.name}${index}`;
-      let where = `web3event.data->>'${filter.name}'`;
-      switch (filter.operator) {
-        case 'In':
-          where += ` IN (:...${paramName})`;
-          break;
-        case 'LessThan':
-          where += ` < :${paramName}`;
-          break;
-        case 'LessThanOrEqual':
-          where += ` <= :${paramName}`;
-          break;
-        case 'MoreThan':
-          where += ` > :${paramName}`;
-          break;
-        case 'MoreThanOrEqual':
-          where += ` >= :${paramName}`;
-          break;
-        default:
-          where += ` = :${paramName}`;
-      }
-
-      query = query.andWhere(where, {
-        [paramName]: filter.value,
-      });
-    });
+    if (request.eventFilters) {
+      query = query.andWhere(
+        databaseUtils.makeWhere(
+          request.eventFilters,
+          (field) => `web3event.data->>'${field}'`
+        )
+      );
+    }
 
     const totalItems = await query.getCount();
 
