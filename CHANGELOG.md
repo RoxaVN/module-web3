@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/RoxaVN/roxavn/compare/v0.1.7...v0.1.8) (2023-12-25)
+
+### Features
+
+- use AttributeFilters ([c78dd54](https://github.com/RoxaVN/roxavn/commit/c78dd540dd9e12d861be62e451cf73dc6c9b47e0))
+
 ### [0.1.7](https://github.com/RoxaVN/roxavn/compare/v0.1.6...v0.1.7) (2023-12-15)
 
 ### Features
