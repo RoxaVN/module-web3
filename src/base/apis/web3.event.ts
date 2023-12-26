@@ -13,7 +13,7 @@ import {
 import { baseModule } from '../module.js';
 import { scopes } from '../access.js';
 
-const web3EventSource = new ApiSource<{
+export interface Web3EventResponse {
   id: string;
   event: string;
   contractAddress: string;
@@ -25,9 +25,14 @@ const web3EventSource = new ApiSource<{
   logIndex?: string;
   data: Record<string, any>;
   createdDate: Date;
-}>([scopes.Web3Event], baseModule);
+}
 
-class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
+const web3EventSource = new ApiSource<Web3EventResponse>(
+  [scopes.Web3Event],
+  baseModule
+);
+
+export class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
   @ArrayMaxSize(10)
   @TransformJson()
   @IsOptional()

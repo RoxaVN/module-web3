@@ -12,7 +12,7 @@ import {
 import { baseModule } from '../module.js';
 import { permissions, scopes } from '../access.js';
 
-const web3ProviderSource = new ApiSource<{
+export interface Web3ProviderResponse {
   id: string;
   url: string;
   networkId: string;
@@ -21,9 +21,14 @@ const web3ProviderSource = new ApiSource<{
   delayBlockCount: number;
   blockRangePerCrawl: number;
   updatedDate: Date;
-}>([scopes.Web3Provider], baseModule);
+}
 
-class GetWeb3ProvidersRequest extends ExactProps<GetWeb3ProvidersRequest> {
+const web3ProviderSource = new ApiSource<Web3ProviderResponse>(
+  [scopes.Web3Provider],
+  baseModule
+);
+
+export class GetWeb3ProvidersRequest extends ExactProps<GetWeb3ProvidersRequest> {
   @IsOptional()
   networkId?: string;
 
@@ -39,7 +44,7 @@ class GetWeb3ProvidersRequest extends ExactProps<GetWeb3ProvidersRequest> {
   public readonly pageSize?: number;
 }
 
-class UpdateWeb3ProviderRequest extends ExactProps<UpdateWeb3ProviderRequest> {
+export class UpdateWeb3ProviderRequest extends ExactProps<UpdateWeb3ProviderRequest> {
   @MinLength(1)
   public readonly web3ProviderId: string;
 
@@ -61,7 +66,7 @@ class UpdateWeb3ProviderRequest extends ExactProps<UpdateWeb3ProviderRequest> {
   public readonly blockRangePerCrawl?: number;
 }
 
-class CreateWeb3ProviderRequest extends ExactProps<CreateWeb3ProviderRequest> {
+export class CreateWeb3ProviderRequest extends ExactProps<CreateWeb3ProviderRequest> {
   @Min(1)
   public readonly networkId: number;
 

@@ -12,7 +12,7 @@ import {
 import { baseModule } from '../module.js';
 import { permissions, scopes } from '../access.js';
 
-const web3EventCrawlerSource = new ApiSource<{
+export interface Web3EventCrawlerResponse {
   id: string;
   event: string;
   contractId: string;
@@ -21,9 +21,14 @@ const web3EventCrawlerSource = new ApiSource<{
   metadata?: any;
   createdDate: Date;
   updatedDate: Date;
-}>([scopes.Web3EventCrawler], baseModule);
+}
 
-class GetEventCrawlersRequest extends ExactProps<GetEventCrawlersRequest> {
+const web3EventCrawlerSource = new ApiSource<Web3EventCrawlerResponse>(
+  [scopes.Web3EventCrawler],
+  baseModule
+);
+
+export class GetEventCrawlersRequest extends ExactProps<GetEventCrawlersRequest> {
   @Min(1)
   @TransformNumber()
   @IsOptional()
@@ -36,7 +41,7 @@ class GetEventCrawlersRequest extends ExactProps<GetEventCrawlersRequest> {
   public readonly pageSize?: number;
 }
 
-class UpdateEventCrawlersRequest extends ExactProps<UpdateEventCrawlersRequest> {
+export class UpdateEventCrawlersRequest extends ExactProps<UpdateEventCrawlersRequest> {
   @MinLength(1)
   public readonly web3EventCrawlerId: string;
 
@@ -45,7 +50,7 @@ class UpdateEventCrawlersRequest extends ExactProps<UpdateEventCrawlersRequest> 
   public readonly isActive?: boolean;
 }
 
-class CreateWeb3EventCrawlerRequest extends ExactProps<CreateWeb3EventCrawlerRequest> {
+export class CreateWeb3EventCrawlerRequest extends ExactProps<CreateWeb3EventCrawlerRequest> {
   @IsOptional()
   public readonly id?: string;
 

@@ -11,7 +11,7 @@ import {
 import { baseModule } from '../module.js';
 import { permissions, scopes } from '../access.js';
 
-const web3ContractSource = new ApiSource<{
+export interface Web3ContractResponse {
   id: string;
   address: `0x${string}`;
   abi: Record<string, any>;
@@ -19,9 +19,14 @@ const web3ContractSource = new ApiSource<{
   metadata?: Record<string, any>;
   createdDate: Date;
   updatedDate: Date;
-}>([scopes.Web3Contract], baseModule);
+}
 
-class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequest> {
+const web3ContractSource = new ApiSource<Web3ContractResponse>(
+  [scopes.Web3Contract],
+  baseModule
+);
+
+export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequest> {
   @MinLength(1)
   public readonly address: `0x${string}`;
 
@@ -31,7 +36,7 @@ class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequest> {
   public readonly abi: any;
 }
 
-class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
+export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
   @MinLength(1)
   public readonly web3ContractId: string;
 
@@ -47,7 +52,7 @@ class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
   public readonly abi?: any;
 }
 
-class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest> {
+export class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest> {
   @MinLength(1)
   @IsOptional()
   public readonly address?: `0x${string}`;

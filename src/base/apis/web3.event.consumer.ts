@@ -10,7 +10,7 @@ import {
 import { baseModule } from '../module.js';
 import { permissions, scopes } from '../access.js';
 
-const web3EventConsumerSource = new ApiSource<{
+export interface Web3EventConsumerResponse {
   id: string;
   name: string;
   lastConsumeEventId: string;
@@ -18,9 +18,14 @@ const web3EventConsumerSource = new ApiSource<{
   metadata?: Record<string, any>;
   createdDate: Date;
   updatedDate: Date;
-}>([scopes.Web3EventConsumer], baseModule);
+}
 
-class GetWeb3EventConsumersRequest extends ExactProps<GetWeb3EventConsumersRequest> {
+const web3EventConsumerSource = new ApiSource<Web3EventConsumerResponse>(
+  [scopes.Web3EventConsumer],
+  baseModule
+);
+
+export class GetWeb3EventConsumersRequest extends ExactProps<GetWeb3EventConsumersRequest> {
   @Min(1)
   @TransformNumber()
   @IsOptional()
