@@ -2,9 +2,9 @@ import {
   ApiSource,
   ExactProps,
   IsOptional,
-  Max,
   Min,
   MinLength,
+  PaginationRequest,
   TransformNumber,
 } from '@roxavn/core/base';
 
@@ -52,7 +52,7 @@ export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequ
   public readonly abi?: any;
 }
 
-export class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest> {
+export class GetWeb3ContractsRequest extends PaginationRequest<GetWeb3ContractsRequest> {
   @MinLength(1)
   @IsOptional()
   public readonly address?: `0x${string}`;
@@ -61,17 +61,6 @@ export class GetWeb3ContractsRequest extends ExactProps<GetWeb3ContractsRequest>
   @TransformNumber()
   @IsOptional()
   public readonly networkId?: number;
-
-  @Min(1)
-  @TransformNumber()
-  @IsOptional()
-  public readonly page?: number;
-
-  @Min(1)
-  @Max(100)
-  @TransformNumber()
-  @IsOptional()
-  public readonly pageSize?: number;
 }
 
 export const web3ContractApi = {

@@ -3,9 +3,9 @@ import {
   ExactProps,
   IsBoolean,
   IsOptional,
-  Max,
   Min,
   MinLength,
+  PaginationRequest,
   TransformNumber,
 } from '@roxavn/core/base';
 
@@ -28,18 +28,7 @@ const web3EventCrawlerSource = new ApiSource<Web3EventCrawlerResponse>(
   baseModule
 );
 
-export class GetEventCrawlersRequest extends ExactProps<GetEventCrawlersRequest> {
-  @Min(1)
-  @TransformNumber()
-  @IsOptional()
-  public readonly page?: number;
-
-  @Min(1)
-  @Max(100)
-  @TransformNumber()
-  @IsOptional()
-  public readonly pageSize?: number;
-}
+export class GetEventCrawlersRequest extends PaginationRequest<GetEventCrawlersRequest> {}
 
 export class UpdateEventCrawlersRequest extends ExactProps<UpdateEventCrawlersRequest> {
   @MinLength(1)

@@ -2,12 +2,9 @@ import {
   ApiSource,
   ArrayMaxSize,
   type AttributeFilters,
-  ExactProps,
   IsOptional,
-  Max,
-  Min,
   TransformJson,
-  TransformNumber,
+  PaginationRequest,
 } from '@roxavn/core/base';
 
 import { baseModule } from '../module.js';
@@ -32,7 +29,7 @@ const web3EventSource = new ApiSource<Web3EventResponse>(
   baseModule
 );
 
-export class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
+export class GetWeb3EventsRequest extends PaginationRequest<GetWeb3EventsRequest> {
   @ArrayMaxSize(10)
   @TransformJson()
   @IsOptional()
@@ -49,17 +46,6 @@ export class GetWeb3EventsRequest extends ExactProps<GetWeb3EventsRequest> {
 
   @IsOptional()
   public readonly networkId?: string;
-
-  @Min(1)
-  @TransformNumber()
-  @IsOptional()
-  public readonly page?: number;
-
-  @Min(1)
-  @Max(100)
-  @TransformNumber()
-  @IsOptional()
-  public readonly pageSize?: number;
 }
 
 export const web3EventApi = {

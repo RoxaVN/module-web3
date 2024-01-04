@@ -3,9 +3,9 @@ import {
   ExactProps,
   IsOptional,
   IsUrl,
-  Max,
   Min,
   MinLength,
+  PaginationRequest,
   TransformNumber,
 } from '@roxavn/core/base';
 
@@ -28,20 +28,9 @@ const web3ProviderSource = new ApiSource<Web3ProviderResponse>(
   baseModule
 );
 
-export class GetWeb3ProvidersRequest extends ExactProps<GetWeb3ProvidersRequest> {
+export class GetWeb3ProvidersRequest extends PaginationRequest<GetWeb3ProvidersRequest> {
   @IsOptional()
   networkId?: string;
-
-  @Min(1)
-  @TransformNumber()
-  @IsOptional()
-  public readonly page?: number;
-
-  @Min(1)
-  @Max(100)
-  @TransformNumber()
-  @IsOptional()
-  public readonly pageSize?: number;
 }
 
 export class UpdateWeb3ProviderRequest extends ExactProps<UpdateWeb3ProviderRequest> {
