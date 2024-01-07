@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/RoxaVN/roxavn/compare/v0.1.8...v0.1.9) (2024-01-07)
+
+### Features
+
+- add customChain ([1801d6b](https://github.com/RoxaVN/roxavn/commit/1801d6b600bccaa8c5a4e21703170bd815c4d297))
+- add IsEthereumPrivateKey ([7762d38](https://github.com/RoxaVN/roxavn/commit/7762d389ff1d4fcb29f53a2f9f5a2951c06d87e4))
+- export response types ([1cb9d19](https://github.com/RoxaVN/roxavn/commit/1cb9d1958d96072bfc5582306254ad3225646722))
+- use PaginationRequest ([0bbf410](https://github.com/RoxaVN/roxavn/commit/0bbf410aa7487fffd06177037131c61a45e94243))
+
 ### [0.1.8](https://github.com/RoxaVN/roxavn/compare/v0.1.7...v0.1.8) (2023-12-25)
 
 ### Features
