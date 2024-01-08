@@ -15,3 +15,23 @@ export class CreateWeb3AccountApiService extends InjectDatabaseService {
     return { id: item.id };
   }
 }
+
+@serverModule.useApi(web3AccountApi.getMany)
+export class GetWeb3AccountsApiService extends InjectDatabaseService {
+  async handle(request: InferApiRequest<typeof web3AccountApi.getMany>) {
+    const page = request.page || 1;
+    const pageSize = request.pageSize || 10;
+
+    const [items, totalItems] = await this.entityManager
+      .getRepository(Web3Account)
+      .findAndCount({
+        take: pageSize,
+        skip: (page - 1) * pageSize,
+      });
+
+    return {
+      items: items,
+      pagination: { page, pageSize, totalItems },
+    };
+  }
+}
