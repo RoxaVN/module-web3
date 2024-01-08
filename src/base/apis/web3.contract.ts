@@ -1,6 +1,7 @@
 import {
   ApiSource,
   ExactProps,
+  IsEthereumAddress,
   IsOptional,
   Min,
   MinLength,
@@ -29,7 +30,7 @@ const web3ContractSource = new ApiSource<Web3ContractResponse>(
 );
 
 export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequest> {
-  @MinLength(1)
+  @IsEthereumAddress()
   public readonly address: `0x${string}`;
 
   @MinLength(1)
@@ -53,7 +54,7 @@ export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequ
   @IsOptional()
   public readonly name?: string;
 
-  @MinLength(1)
+  @IsEthereumAddress()
   @IsOptional()
   public readonly address?: `0x${string}`;
 
