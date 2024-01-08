@@ -7,6 +7,7 @@ export class AddWeb3Account1704703058714 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "web3_account" (
         "id" BIGSERIAL NOT NULL,
+        "name" text NOT NULL,
         "privateKey" text NOT NULL,
         "metadata" jsonb,
         "createdDate" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),

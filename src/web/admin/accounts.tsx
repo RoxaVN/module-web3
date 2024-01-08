@@ -1,4 +1,4 @@
-import { Textarea } from '@mantine/core';
+import { TextInput, Textarea } from '@mantine/core';
 import {
   ApiFormGroup,
   ApiTable,
@@ -23,6 +23,7 @@ const Page = () => {
       header={t('accounts')}
       columns={{
         id: { label: tCore('id') },
+        name: { label: tCore('name') },
         privateKey: {
           label: t('address'),
           render: (value) => {
@@ -45,6 +46,10 @@ const Page = () => {
               <ApiFormGroup
                 api={web3AccountApi.create}
                 fields={[
+                  {
+                    name: 'name',
+                    input: <TextInput label={tCore('name')} />,
+                  },
                   {
                     name: 'privateKey',
                     input: <Textarea label={t('privateKey')} />,

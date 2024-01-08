@@ -15,6 +15,9 @@ export class Web3Account {
   id: string;
 
   @Column('text')
+  name: string;
+
+  @Column('text')
   privateKey: `0x${string}`;
 
   @Column({ type: 'jsonb', nullable: true })

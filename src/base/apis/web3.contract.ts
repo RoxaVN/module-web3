@@ -3,6 +3,7 @@ import {
   ExactProps,
   IsEthereumAddress,
   IsOptional,
+  MaxLength,
   Min,
   MinLength,
   PaginationRequest,
@@ -34,6 +35,7 @@ export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequ
   public readonly address: `0x${string}`;
 
   @MinLength(1)
+  @MaxLength(256)
   public readonly name: string;
 
   @Min(1)
@@ -51,6 +53,7 @@ export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequ
   public readonly web3ContractId: string;
 
   @MinLength(1)
+  @MaxLength(256)
   @IsOptional()
   public readonly name?: string;
 
