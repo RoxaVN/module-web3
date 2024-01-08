@@ -3,6 +3,7 @@ import { accessManager } from '@roxavn/core/base';
 import { baseModule } from './module.js';
 
 export const scopes = accessManager.makeScopes(baseModule, {
+  Web3Account: { name: 'web3Account' },
   Web3EventConsumer: { name: 'web3EventConsumer' },
   Web3Event: { name: 'web3Event' },
   Web3EventCrawler: { name: 'web3EventCrawler' },
@@ -11,6 +12,8 @@ export const scopes = accessManager.makeScopes(baseModule, {
 });
 
 export const permissions = accessManager.makePermissions(scopes, {
+  CreateWeb3Account: {},
+
   ReadWeb3EventConsumers: {},
 
   ReadWeb3Contracts: {},
