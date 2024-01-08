@@ -15,6 +15,7 @@
   "event": "Event",
   "events": "Events",
   "accounts": "Accounts",
+  "writeAccount": "Write account",
   "addWeb3Account": "Add web3 account",
   "privateKey": "Private key",
   "block": "Block",

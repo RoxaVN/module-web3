@@ -27,6 +27,9 @@ export class Web3Contract {
   @Column('bigint')
   networkId: string;
 
+  @Column('bigint', { nullable: true })
+  writeAccountId?: string;
+
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>;
 

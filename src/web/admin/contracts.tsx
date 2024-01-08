@@ -25,6 +25,7 @@ const Page = () => {
         id: { label: tCore('id') },
         address: { label: t('address') },
         networkId: { label: t('networkId') },
+        writeAccountId: { label: t('writeAccount') },
         updatedDate: {
           label: tCore('updatedDate'),
           render: utils.Render.relativeTime,
@@ -59,6 +60,10 @@ const Page = () => {
                     input: <TextInput label={t('address')} />,
                   },
                   {
+                    name: 'writeAccountId',
+                    input: <TextInput label={t('writeAccount')} />,
+                  },
+                  {
                     name: 'abi',
                     input: <ObjectInput label={t('contractAbi')} />,
                   },
@@ -82,6 +87,7 @@ const Page = () => {
                   abi: item.abi,
                   address: item.address,
                   networkId: parseInt(item.networkId),
+                  writeAccountId: item.writeAccountId,
                 }}
                 fields={[
                   {
@@ -91,6 +97,10 @@ const Page = () => {
                   {
                     name: 'address',
                     input: <TextInput label={t('address')} />,
+                  },
+                  {
+                    name: 'writeAccountId',
+                    input: <TextInput label={t('writeAccount')} />,
                   },
                   {
                     name: 'abi',

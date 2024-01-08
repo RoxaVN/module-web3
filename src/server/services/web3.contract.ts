@@ -39,6 +39,7 @@ export class UpdateWeb3ContractApiService extends InjectDatabaseService {
         address: request.address,
         abi: request.abi,
         networkId: request.networkId?.toString(),
+        writeAccountId: request.writeAccountId,
       }
     );
     return {};
