@@ -3,3 +3,4 @@ export * from './web3.event.entity.js';
 export * from './web3.contract.entity.js';
 export * from './web3.provider.entity.js';
 export * from './web3.event.consumer.entity.js';
+export * from './web3.account.entity.js';
