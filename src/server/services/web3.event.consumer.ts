@@ -8,7 +8,10 @@ import {
 import { MoreThan } from 'typeorm';
 import { PublicClient, createPublicClient, http } from 'viem';
 
-import { web3EventConsumerApi } from '../../base/index.js';
+import {
+  NotFoundProviderException,
+  web3EventConsumerApi,
+} from '../../base/index.js';
 import {
   Web3Event,
   Web3EventConsumer,
@@ -63,7 +66,7 @@ export abstract class ConsumeWeb3EventService extends BaseService {
         .getRepository(Web3Provider)
         .findOne({ where: { networkId: crawler.contract.networkId } });
       if (!provider) {
-        throw new NotFoundException();
+        throw new NotFoundProviderException(crawler.contract.networkId);
       }
 
       this._publicClient = createPublicClient({

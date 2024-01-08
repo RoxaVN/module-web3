@@ -6,7 +6,7 @@ import { IsEthereumPrivateKey } from '../validation.js';
 
 export interface Web3AccountResponse {
   id: string;
-  privateKey: string;
+  privateKey: `0x${string}`;
   metadata?: Record<string, any>;
   createdDate: Date;
   updatedDate: Date;

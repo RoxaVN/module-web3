@@ -1,9 +1,16 @@
 import { InferApiRequest, NotFoundException } from '@roxavn/core/base';
 import { InjectDatabaseService } from '@roxavn/core/server';
+import { createWalletClient, http, publicActions } from 'viem';
+import { privateKeyToAccount } from 'viem/accounts';
 
-import { web3ContractApi } from '../../base/index.js';
+import {
+  NotFoundProviderException,
+  utils,
+  web3ContractApi,
+} from '../../base/index.js';
 import { Web3Contract } from '../entities/index.js';
 import { serverModule } from '../module.js';
+import { Web3Provider } from '../../web/index.js';
 
 @serverModule.injectable()
 export class GetWeb3ContractApiService extends InjectDatabaseService {
@@ -67,5 +74,51 @@ export class GetWeb3ContractsApiService extends InjectDatabaseService {
       items: items,
       pagination: { page, pageSize, totalItems },
     };
+  }
+}
+
+@serverModule.injectable()
+export class WriteContractService extends InjectDatabaseService {
+  async handle(request: {
+    networkId: string | number;
+    contractAddress: `0x${string}`;
+    functionName: string;
+    args: any[];
+  }) {
+    const contract = await this.entityManager
+      .getRepository(Web3Contract)
+      .findOne({
+        relations: ['writeAccount'],
+        where: {
+          networkId: request.networkId.toString(),
+          address: request.contractAddress,
+        },
+      });
+    if (contract && contract.writeAccount) {
+      const provider = await this.entityManager
+        .getRepository(Web3Provider)
+        .findOne({ where: { networkId: request.networkId } });
+      if (!provider) {
+        throw new NotFoundProviderException(request.networkId);
+      }
+
+      const account = privateKeyToAccount(contract.writeAccount.privateKey);
+      const client = createWalletClient({
+        account,
+        chain: utils.customChain(request.networkId, provider.url),
+        transport: http(provider.url),
+      }).extend(publicActions);
+
+      const hash = await client.writeContract({
+        address: request.contractAddress,
+        abi: contract.abi,
+        functionName: request.functionName,
+        args: request.args,
+      });
+      await client.waitForTransactionReceipt({ hash });
+
+      return { hash };
+    }
+    throw new NotFoundException();
   }
 }

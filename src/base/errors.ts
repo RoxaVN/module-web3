@@ -9,7 +9,7 @@ export class NotFoundProviderException extends NotFoundException {
     } as I18nErrorField,
   };
 
-  constructor(networkId: string) {
+  constructor(networkId: string | number) {
     super();
     this.i18n.default.params = { networkId };
   }

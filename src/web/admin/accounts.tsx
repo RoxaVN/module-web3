@@ -26,7 +26,7 @@ const Page = () => {
         privateKey: {
           label: t('address'),
           render: (value) => {
-            const account = privateKeyToAccount(value as any);
+            const account = privateKeyToAccount(value);
             return account.address;
           },
         },

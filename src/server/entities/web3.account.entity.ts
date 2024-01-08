@@ -15,7 +15,7 @@ export class Web3Account {
   id: string;
 
   @Column('text')
-  privateKey: string;
+  privateKey: `0x${string}`;
 
   @Column({ type: 'jsonb', nullable: true })
   metadata?: Record<string, any>;
