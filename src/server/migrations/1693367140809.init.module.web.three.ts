@@ -7,6 +7,7 @@ export class InitModuleWebThree1693367140809 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "web3_contract" (
         "id" BIGSERIAL NOT NULL,
+        "name" text NOT NULL,
         "address" text NOT NULL,
         "abi" jsonb NOT NULL,
         "networkId" bigint NOT NULL,

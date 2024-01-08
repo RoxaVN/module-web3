@@ -23,6 +23,7 @@ const Page = () => {
       header={t('contracts')}
       columns={{
         id: { label: tCore('id') },
+        name: { label: tCore('name') },
         address: { label: t('address') },
         networkId: { label: t('networkId') },
         writeAccountId: { label: t('writeAccount') },
@@ -51,6 +52,10 @@ const Page = () => {
               <ApiFormGroup
                 api={web3ContractApi.create}
                 fields={[
+                  {
+                    name: 'name',
+                    input: <TextInput label={tCore('name')} />,
+                  },
                   {
                     name: 'networkId',
                     input: <NumberInput label={t('networkId')} />,
@@ -88,8 +93,13 @@ const Page = () => {
                   address: item.address,
                   networkId: parseInt(item.networkId),
                   writeAccountId: item.writeAccountId,
+                  name: item.name,
                 }}
                 fields={[
+                  {
+                    name: 'name',
+                    input: <TextInput label={tCore('name')} />,
+                  },
                   {
                     name: 'networkId',
                     input: <NumberInput label={t('networkId')} />,

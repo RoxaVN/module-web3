@@ -19,6 +19,9 @@ export class Web3Contract {
   id: string;
 
   @Column('text')
+  name: string;
+
+  @Column('text')
   address: `0x${string}`;
 
   @Column('jsonb')

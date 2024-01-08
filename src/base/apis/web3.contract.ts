@@ -13,6 +13,7 @@ import { permissions, scopes } from '../access.js';
 
 export interface Web3ContractResponse {
   id: string;
+  name: string;
   address: `0x${string}`;
   abi: Record<string, any>;
   networkId: string;
@@ -31,6 +32,9 @@ export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequ
   @MinLength(1)
   public readonly address: `0x${string}`;
 
+  @MinLength(1)
+  public readonly name: string;
+
   @Min(1)
   public readonly networkId: number;
 
@@ -44,6 +48,10 @@ export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequ
 export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequest> {
   @MinLength(1)
   public readonly web3ContractId: string;
+
+  @MinLength(1)
+  @IsOptional()
+  public readonly name?: string;
 
   @MinLength(1)
   @IsOptional()
