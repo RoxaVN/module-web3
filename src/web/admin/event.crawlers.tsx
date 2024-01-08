@@ -1,3 +1,4 @@
+import { Checkbox, NumberInput, TextInput } from '@mantine/core';
 import {
   ApiFormGroup,
   ApiTable,
@@ -11,7 +12,6 @@ import { IconEdit, IconPlus, IconSpider } from '@tabler/icons-react';
 
 import { web3EventCrawlerApi } from '../../base/index.js';
 import { webModule } from '../module.js';
-import { Checkbox, NumberInput, TextInput } from '@mantine/core';
 
 const Page = () => {
   const { t } = webModule.useTranslation();
