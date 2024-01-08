@@ -36,7 +36,7 @@ export class CreateWeb3ContractRequest extends ExactProps<CreateWeb3ContractRequ
 
   @MinLength(1)
   @IsOptional()
-  public readonly writeAccountId: string;
+  public readonly writeAccountId?: string;
 
   public readonly abi: any;
 }
@@ -55,7 +55,7 @@ export class UpdateWeb3ContractRequest extends ExactProps<UpdateWeb3ContractRequ
 
   @MinLength(1)
   @IsOptional()
-  public readonly writeAccountId: string;
+  public readonly writeAccountId?: string;
 
   @IsOptional()
   public readonly abi?: any;
