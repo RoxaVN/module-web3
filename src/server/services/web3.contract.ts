@@ -8,9 +8,8 @@ import {
   utils,
   web3ContractApi,
 } from '../../base/index.js';
-import { Web3Contract } from '../entities/index.js';
+import { Web3Contract, Web3Provider } from '../entities/index.js';
 import { serverModule } from '../module.js';
-import { Web3Provider } from '../../web/index.js';
 
 @serverModule.injectable()
 export class GetWeb3ContractApiService extends InjectDatabaseService {
@@ -81,8 +80,11 @@ export class GetWeb3ContractsApiService extends InjectDatabaseService {
 @serverModule.injectable()
 export class WriteContractService extends InjectDatabaseService {
   async handle(request: {
-    networkId: string | number;
-    contractAddress: `0x${string}`;
+    contract: {
+      id?: string;
+      networkId?: string | number;
+      address?: `0x${string}`;
+    };
     functionName: string;
     args: any[];
   }) {
@@ -91,27 +93,28 @@ export class WriteContractService extends InjectDatabaseService {
       .findOne({
         relations: ['writeAccount'],
         where: {
-          networkId: request.networkId.toString(),
-          address: request.contractAddress,
+          id: request.contract.id,
+          networkId: request.contract.networkId?.toString(),
+          address: request.contract.address,
         },
       });
     if (contract && contract.writeAccount) {
       const provider = await this.entityManager
         .getRepository(Web3Provider)
-        .findOne({ where: { networkId: request.networkId } });
+        .findOne({ where: { networkId: contract.networkId } });
       if (!provider) {
-        throw new NotFoundProviderException(request.networkId);
+        throw new NotFoundProviderException(contract.networkId);
       }
 
       const account = privateKeyToAccount(contract.writeAccount.privateKey);
       const client = createWalletClient({
         account,
-        chain: utils.customChain(request.networkId, provider.url),
+        chain: utils.customChain(contract.networkId, provider.url),
         transport: http(provider.url),
       }).extend(publicActions);
 
       const hash = await client.writeContract({
-        address: request.contractAddress,
+        address: contract.address,
         abi: contract.abi,
         functionName: request.functionName,
         args: request.args,
