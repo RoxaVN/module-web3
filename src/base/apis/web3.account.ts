@@ -1,6 +1,7 @@
 import {
   ApiSource,
   ExactProps,
+  IsOptional,
   MaxLength,
   MinLength,
   PaginationRequest,
@@ -33,7 +34,10 @@ export class CreateWeb3AccountRequest extends ExactProps<CreateWeb3AccountReques
   public readonly name: string;
 }
 
-export class GetWeb3AccountsRequest extends PaginationRequest<GetWeb3AccountsRequest> {}
+export class GetWeb3AccountsRequest extends PaginationRequest<GetWeb3AccountsRequest> {
+  @IsOptional()
+  public readonly nameText?: string;
+}
 
 export const web3AccountApi = {
   getMany: web3AccountSource.getMany({

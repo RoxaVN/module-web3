@@ -4,6 +4,7 @@ import { InjectDatabaseService } from '@roxavn/core/server';
 import { web3AccountApi } from '../../base/index.js';
 import { Web3Account } from '../entities/index.js';
 import { serverModule } from '../module.js';
+import { ILike } from 'typeorm';
 
 @serverModule.useApi(web3AccountApi.create)
 export class CreateWeb3AccountApiService extends InjectDatabaseService {
@@ -25,6 +26,9 @@ export class GetWeb3AccountsApiService extends InjectDatabaseService {
     const [items, totalItems] = await this.entityManager
       .getRepository(Web3Account)
       .findAndCount({
+        where: {
+          name: request.nameText && ILike('%' + request.nameText + '%'),
+        },
         take: pageSize,
         skip: (page - 1) * pageSize,
       });

@@ -13,6 +13,7 @@ import { IconEdit, IconFileCode, IconPlus } from '@tabler/icons-react';
 
 import { web3ContractApi } from '../../base/index.js';
 import { webModule } from '../module.js';
+import { Web3AccountInput } from '../components/Web3AccountInput.js';
 
 const Page = () => {
   const { t } = webModule.useTranslation();
@@ -66,7 +67,7 @@ const Page = () => {
                   },
                   {
                     name: 'writeAccountId',
-                    input: <TextInput label={t('writeAccount')} />,
+                    input: <Web3AccountInput label={t('writeAccount')} />,
                   },
                   {
                     name: 'abi',
@@ -110,7 +111,7 @@ const Page = () => {
                   },
                   {
                     name: 'writeAccountId',
-                    input: <TextInput label={t('writeAccount')} />,
+                    input: <Web3AccountInput label={t('writeAccount')} />,
                   },
                   {
                     name: 'abi',
