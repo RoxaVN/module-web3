@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/RoxaVN/roxavn/compare/v0.1.9...v0.1.10) (2024-01-09)
+
+### Features
+
+- add accounts admin page ([0d2992a](https://github.com/RoxaVN/roxavn/commit/0d2992a27825ad9fb8c154ccded746a4e3ccbadf))
+- add name column to Web3Account ([7a7bf8a](https://github.com/RoxaVN/roxavn/commit/7a7bf8a70377449fbb9ba599e55c5934f6807c52))
+- add name column to Web3Contract ([e125046](https://github.com/RoxaVN/roxavn/commit/e1250468661d0270a900cdc9d1b95c2bff62bff5))
+- add Web3Account entity ([0e126f6](https://github.com/RoxaVN/roxavn/commit/0e126f6c9ef106aa0fcfc3063b68bedbc01136fc))
+- add web3AccountApi.create ([1ddbfe7](https://github.com/RoxaVN/roxavn/commit/1ddbfe73ab311a24e41445f829ab32e2231e2427))
+- add web3AccountApi.getMany ([47d1985](https://github.com/RoxaVN/roxavn/commit/47d1985983a180ba1a9c9d8ea62c18ef35dd19f1))
+- add writeAccountId to Web3ContractResponse ([29db20e](https://github.com/RoxaVN/roxavn/commit/29db20e03411a35089eb48c3f85a5ba5db553948))
+- add WriteContractService ([7506465](https://github.com/RoxaVN/roxavn/commit/750646579d201974279649957d966a23c8928961))
+
+### Bug Fixes
+
+- make writeAccountId optional ([25e6324](https://github.com/RoxaVN/roxavn/commit/25e63246811adec094272fb69b42a14a13758dc6))
+- validate with IsEthereumAddress ([83c63fa](https://github.com/RoxaVN/roxavn/commit/83c63fae7b5806b9e464bb80ca6d7d3fbf943413))
+
 ### [0.1.9](https://github.com/RoxaVN/roxavn/compare/v0.1.8...v0.1.9) (2024-01-07)
 
 ### Features
